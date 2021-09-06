@@ -1,4 +1,4 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef, useCallback, useContext } from 'react';
 import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import * as Yup from 'yup';
@@ -9,11 +9,19 @@ import { Container, Content, Background } from './styles';
 
 import Input from '../../components/Input';
 import Button from '../../components/Button';
+import { AuthContex } from '../../context/AuthContext';
+
+interface SignInFormData {
+  email: string;
+  password: string;
+}
 
 const SigIn: React.FC = () => {
   const formRef = useRef<FormHandles>(null);
 
-  const handleSubmit = useCallback(async (data: object) => {
+  const { signIn } = useContext(AuthContex);
+
+  const handleSubmit = useCallback(async (data: SignInFormData) => {
     try {
       // clean errors
       formRef.current?.setErrors({});
@@ -29,12 +37,17 @@ const SigIn: React.FC = () => {
       await schema.validate(data, {
         abortEarly: false,
       });
+
+      signIn({
+        email: data.email,
+        password: data.password,
+      });
     } catch (err) {
       const errors = getValidationErrors(err);
 
       formRef.current?.setErrors(errors);
     }
-  }, []);
+  }, [signIn]);
   return (
     <Container>
       <Content>
