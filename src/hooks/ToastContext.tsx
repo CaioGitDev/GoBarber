@@ -5,7 +5,7 @@ import { v4 as uuid } from 'uuid';
 
 import ToastContainer from '../components/ToastContainer';
 
-interface ToastMessage {
+export interface ToastMessage {
   id: string;
   type: 'success' | 'error' | 'info';
   title: string;
@@ -41,7 +41,7 @@ const ToastProvider: React.FC = ({ children }) => {
   return (
     <ToastContext.Provider value={{ addToast, removeToast }}>
       {children}
-      <ToastContainer />
+      <ToastContainer messages={messages} />
     </ToastContext.Provider>
   );
 };
